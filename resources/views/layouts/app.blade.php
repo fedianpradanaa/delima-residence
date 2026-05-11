@@ -37,74 +37,257 @@
 
 <body class="bg-slate-50">
 
-    <!-- Navbar -->
-    <nav class="bg-teal-600 shadow">
+<!-- Navbar -->
+<nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
 
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+    <div class="max-w-7xl mx-auto px-4">
 
-            <h1 class="text-white text-xl font-bold">
-                Delima Residence
-            </h1>
+        <div class="h-16 flex items-center justify-between">
+
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+
+                <div class="w-10 h-10 rounded-2xl bg-teal-600 flex items-center justify-center text-white font-bold shadow">
+
+                    D
+
+                </div>
+
+                <div>
+
+                    <div class="font-bold text-slate-800">
+
+                        Cluster Delima Residence
+
+                    </div>
+
+                    <div class="text-xs text-slate-400">
+
+                        Sumberjaya
+
+                    </div>
+
+                </div>
+
+            </div>
 
             @auth
 
-            <div class="flex items-center gap-4">
+            <div
+                x-data="{ open:false }"
+                class="flex items-center"
+            >
 
-                {{-- ADMIN --}}
-                @if(auth()->user()->role == 'admin')
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center gap-2">
 
+                    {{-- ADMIN --}}
+                    @if(auth()->user()->role == 'admin')
+
+                        <a
+                            href="/dashboard"
+                            class="px-4 py-2 rounded-xl text-sm font-medium transition
+                            {{ request()->is('dashboard') ? 'bg-teal-600 text-white shadow' : 'text-slate-600 hover:bg-slate-100' }}"
+                        >
+
+                            Dashboard
+
+                        </a>
+
+                        <a
+                            href="/payments"
+                            class="px-4 py-2 rounded-xl text-sm font-medium transition
+                            {{ request()->is('payments') ? 'bg-teal-600 text-white shadow' : 'text-slate-600 hover:bg-slate-100' }}"
+                        >
+
+                            Pembayaran
+
+                        </a>
+
+                        <a
+                            href="/expenses"
+                            class="px-4 py-2 rounded-xl text-sm font-medium transition
+                            {{ request()->is('expenses') ? 'bg-teal-600 text-white shadow' : 'text-slate-600 hover:bg-slate-100' }}"
+                        >
+
+                            Pengeluaran
+
+                        </a>
+
+                        <a
+                            href="/cash-report"
+                            class="px-4 py-2 rounded-xl text-sm font-medium transition
+                            {{ request()->is('cash-report') ? 'bg-teal-600 text-white shadow' : 'text-slate-600 hover:bg-slate-100' }}"
+                        >
+
+                            Kas Cluster
+
+                        </a>
+
+                    @endif
+
+                    {{-- WARGA --}}
+                    @if(auth()->user()->role == 'warga')
+
+                        <a
+                            href="/payment"
+                            class="px-4 py-2 rounded-xl text-sm font-medium transition
+                            {{ request()->is('payment') ? 'bg-teal-600 text-white shadow' : 'text-slate-600 hover:bg-slate-100' }}"
+                        >
+
+                            Upload IPL
+
+                        </a>
+
+                        <a
+                            href="/payment-history"
+                            class="px-4 py-2 rounded-xl text-sm font-medium transition
+                            {{ request()->is('payment-history') ? 'bg-teal-600 text-white shadow' : 'text-slate-600 hover:bg-slate-100' }}"
+                        >
+
+                            Riwayat
+
+                        </a>
+
+                        <a
+                            href="/cash-report"
+                            class="px-4 py-2 rounded-xl text-sm font-medium transition
+                            {{ request()->is('cash-report') ? 'bg-teal-600 text-white shadow' : 'text-slate-600 hover:bg-slate-100' }}"
+                        >
+
+                            Kas Cluster
+
+                        </a>
+
+                    @endif
+
+                    {{-- PASSWORD --}}
                     <a
-                        href="/dashboard"
-                        class="text-white"
+                        href="/change-password"
+                        class="px-4 py-2 rounded-xl text-sm font-medium transition
+                        {{ request()->is('change-password') ? 'bg-teal-600 text-white shadow' : 'text-slate-600 hover:bg-slate-100' }}"
                     >
-                        Dashboard
+
+                        Password
+
                     </a>
 
-                    <a
-                        href="/payments"
-                        class="text-white"
-                    >
-                        Pembayaran
-                    </a>
+                    <!-- Logout -->
+                    <form action="/logout" method="POST">
 
-                @endif
+                        @csrf
 
-                {{-- WARGA --}}
-                @if(auth()->user()->role == 'warga')
+                        <button
+                            class="bg-red-50 hover:bg-red-100 text-red-600
+                            px-4 py-2 rounded-xl text-sm font-medium transition"
+                        >
 
-                    <a
-                        href="/payment/create"
-                        class="text-white"
-                    >
-                        Pembayaran
-                    </a>
+                            Logout
 
-                    <a
-                        href="/payment/history"
-                        class="text-white"
-                    >
-                        Riwayat
-                    </a>
+                        </button>
 
-                @endif
+                    </form>
 
-                {{-- SEMUA USER --}}
-                <a
-                    href="/change-password"
-                    class="text-white"
+                </div>
+
+                <!-- Mobile Button -->
+                <button
+                    @click="open = !open"
+                    class="md:hidden w-11 h-11 rounded-xl border border-slate-300
+                    flex items-center justify-center"
                 >
-                    Ganti Password
-                </a>
 
-                <form action="/logout" method="POST">
+                    ☰
 
-                    @csrf
+                </button>
 
-                    <button class="text-white">
-                        Logout
-                    </button>
+                <!-- Mobile Menu -->
+                <div
+                    x-show="open"
+                    x-transition
+                    @click.away="open = false"
+                    class="absolute top-16 right-4 w-64 bg-white border border-slate-200
+                    rounded-2xl shadow-xl p-3 md:hidden z-50"
+                >
 
-                </form>
+                    <div class="mb-3 pb-3 border-b border-slate-200">
+
+                        <div class="font-semibold text-slate-700">
+
+                            {{ auth()->user()->name }}
+
+                        </div>
+
+                        <div class="text-xs text-slate-400 uppercase">
+
+                            {{ auth()->user()->role }}
+
+                        </div>
+
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+
+                        {{-- ADMIN --}}
+                        @if(auth()->user()->role == 'admin')
+
+                            <a href="/dashboard" class="px-4 py-3 rounded-xl hover:bg-slate-100">
+                                Dashboard
+                            </a>
+
+                            <a href="/payments" class="px-4 py-3 rounded-xl hover:bg-slate-100">
+                                Pembayaran
+                            </a>
+
+                            <a href="/expenses" class="px-4 py-3 rounded-xl hover:bg-slate-100">
+                                Pengeluaran
+                            </a>
+
+                            <a href="/cash-report" class="px-4 py-3 rounded-xl hover:bg-slate-100">
+                                Kas Cluster
+                            </a>
+
+                        @endif
+
+                        {{-- WARGA --}}
+                        @if(auth()->user()->role == 'warga')
+
+                            <a href="/payment" class="px-4 py-3 rounded-xl hover:bg-slate-100">
+                                Upload IPL
+                            </a>
+
+                            <a href="/payment-history" class="px-4 py-3 rounded-xl hover:bg-slate-100">
+                                Riwayat
+                            </a>
+
+                            <a href="/cash-report" class="px-4 py-3 rounded-xl hover:bg-slate-100">
+                                Kas Cluster
+                            </a>
+
+                        @endif
+
+                        <a href="/change-password" class="px-4 py-3 rounded-xl hover:bg-slate-100">
+                            Password
+                        </a>
+
+                        <form action="/logout" method="POST">
+
+                            @csrf
+
+                            <button
+                                class="w-full text-left px-4 py-3 rounded-xl
+                                text-red-600 hover:bg-red-50"
+                            >
+
+                                Logout
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
 
             </div>
 
@@ -112,10 +295,14 @@
 
         </div>
 
-    </nav>
+    </div>
+
+</nav>
 
     <!-- Content -->
     @yield('content')
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 </html>

@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 
 use App\Models\Resident;
 use App\Models\Payment;
-use App\Models\ImportPayment;
 
 class DashboardController extends Controller
 {
@@ -46,12 +45,12 @@ class DashboardController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | PAYMENT REALTIME
+        | PAYMENT BULAN INI
         |--------------------------------------------------------------------------
         */
 
         $payments = Payment::with([
-                'user.resident'
+                'resident'
             ])
             ->where('bulan', $bulan)
             ->where('tahun', $tahun)
@@ -69,7 +68,7 @@ class DashboardController extends Controller
                 'status_verifikasi',
                 'diterima'
             )
-            ->pluck('user.resident_id')
+            ->pluck('resident_id')
             ->unique()
             ->count();
 
@@ -79,7 +78,8 @@ class DashboardController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $belumBayar = $totalWarga - $sudahBayar;
+        $belumBayar =
+            max($totalWarga - $sudahBayar, 0);
 
         /*
         |--------------------------------------------------------------------------
@@ -100,39 +100,39 @@ class DashboardController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | TOTAL PEMASUKAN LEGACY
+        | TOTAL IPL
         |--------------------------------------------------------------------------
         */
 
-        $legacyPemasukan = ImportPayment::where(
-            'bulan_angka',
-            '<=',
-            '2026-04'
-        )->sum('nominal');
-
-        /*
-        |--------------------------------------------------------------------------
-        | TOTAL PEMASUKAN REALTIME
-        |--------------------------------------------------------------------------
-        */
-
-        $realtimePemasukan = Payment::where(
+        $totalIPL = Payment::where(
                 'status_verifikasi',
                 'diterima'
             )
-            ->where(function ($query) {
+            ->sum('nominal_ipl');
 
-                $query->where('tahun', '>', 2026)
+        /*
+        |--------------------------------------------------------------------------
+        | TOTAL KAS
+        |--------------------------------------------------------------------------
+        */
 
-                      ->orWhere(function ($q) {
+        $totalKas = Payment::where(
+                'status_verifikasi',
+                'diterima'
+            )
+            ->sum('nominal_kas');
 
-                          $q->where('tahun', 2026)
-                            ->where('bulan', '>=', 5);
+        /*
+        |--------------------------------------------------------------------------
+        | TOTAL DENDA
+        |--------------------------------------------------------------------------
+        */
 
-                      });
-
-            })
-            ->sum('total');
+        $totalDenda = Payment::where(
+                'status_verifikasi',
+                'diterima'
+            )
+            ->sum('nominal_denda');
 
         /*
         |--------------------------------------------------------------------------
@@ -140,9 +140,11 @@ class DashboardController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $totalPemasukan =
-            $legacyPemasukan +
-            $realtimePemasukan;
+        $totalPemasukan = Payment::where(
+                'status_verifikasi',
+                'diterima'
+            )
+            ->sum('total');
 
         /*
         |--------------------------------------------------------------------------
@@ -150,46 +152,7 @@ class DashboardController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $chartData = [];
-
-        /*
-        |--------------------------------------------------------------------------
-        | CHART LEGACY
-        |--------------------------------------------------------------------------
-        */
-
-        $legacyChart = ImportPayment::selectRaw(
-            '
-            bulan_angka,
-            SUM(nominal) as total
-            '
-        )
-        ->where(
-            'bulan_angka',
-            '<=',
-            '2026-04'
-        )
-        ->groupBy('bulan_angka')
-        ->orderBy('bulan_angka')
-        ->get();
-
-        foreach ($legacyChart as $item) {
-
-            $chartData[] = [
-
-                'bulan_angka' => $item->bulan_angka,
-
-                'total' => $item->total
-            ];
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | CHART REALTIME
-        |--------------------------------------------------------------------------
-        */
-
-        $realtimeChart = Payment::selectRaw(
+        $chartData = Payment::selectRaw(
             '
             CONCAT(
                 tahun,
@@ -204,18 +167,6 @@ class DashboardController extends Controller
             'status_verifikasi',
             'diterima'
         )
-        ->where(function ($query) {
-
-            $query->where('tahun', '>', 2026)
-
-                  ->orWhere(function ($q) {
-
-                      $q->where('tahun', 2026)
-                        ->where('bulan', '>=', 5);
-
-                  });
-
-        })
         ->groupBy(
             'tahun',
             'bulan'
@@ -223,31 +174,6 @@ class DashboardController extends Controller
         ->orderBy('tahun')
         ->orderBy('bulan')
         ->get();
-
-        foreach ($realtimeChart as $item) {
-
-            $chartData[] = [
-
-                'bulan_angka' => $item->bulan_angka,
-
-                'total' => $item->total
-            ];
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | SORT CHART
-        |--------------------------------------------------------------------------
-        */
-
-        usort($chartData, function ($a, $b) {
-
-            return strcmp(
-                $a['bulan_angka'],
-                $b['bulan_angka']
-            );
-
-        });
 
         /*
         |--------------------------------------------------------------------------
@@ -263,8 +189,13 @@ class DashboardController extends Controller
                 'rumahKosong',
                 'belumBayar',
                 'tidakRonda',
+                'totalIPL',
+                'totalKas',
+                'totalDenda',
                 'totalPemasukan',
-                'chartData'
+                'chartData',
+                'bulan',
+                'tahun'
             )
         );
     }

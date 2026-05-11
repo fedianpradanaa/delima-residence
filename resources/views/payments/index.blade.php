@@ -185,19 +185,6 @@
 
         </div>
 
-        <!-- Chart -->
-        <div class="bg-white rounded-3xl shadow-sm p-6 mb-8">
-
-            <h2 class="text-xl font-bold mb-6">
-
-                Grafik Pembayaran
-
-            </h2>
-
-            <canvas id="paymentChart"></canvas>
-
-        </div>
-
         <!-- Table -->
         <div class="bg-white rounded-3xl shadow-sm overflow-hidden">
 
@@ -409,68 +396,9 @@
 
 </div>
 
-<!-- Chart JS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-
-/*
-|--------------------------------------------------------------------------
-| CHART
-|--------------------------------------------------------------------------
-*/
-
-const ctx = document.getElementById('paymentChart');
-
-const chartData = @json($chartData);
-
-const labels = chartData.map(item => item.bulan_angka);
-
-const totals = chartData.map(item => item.total);
-
-new Chart(ctx, {
-
-    type: 'bar',
-
-    data: {
-
-        labels: labels,
-
-        datasets: [{
-
-            label: 'Pembayaran',
-
-            data: totals,
-
-            borderWidth: 1
-
-        }]
-
-    },
-
-    options: {
-
-        responsive: true,
-
-        scales: {
-
-            y: {
-
-                beginAtZero: true,
-
-                ticks: {
-
-                    stepSize: 500000
-
-                }
-
-            }
-
-        }
-
-    }
-
-});
 
 /*
 |--------------------------------------------------------------------------

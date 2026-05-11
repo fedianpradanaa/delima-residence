@@ -35,18 +35,39 @@
                 class="rounded-xl border-slate-300"
             >
 
-                @for($i = 1; $i <= 12; $i++)
+                @php
+
+                $bulanList = [
+
+                    1  => 'Januari',
+                    2  => 'Februari',
+                    3  => 'Maret',
+                    4  => 'April',
+                    5  => 'Mei',
+                    6  => 'Juni',
+                    7  => 'Juli',
+                    8  => 'Agustus',
+                    9  => 'September',
+                    10 => 'Oktober',
+                    11 => 'November',
+                    12 => 'Desember',
+
+                ];
+
+                @endphp
+
+                @foreach($bulanList as $key => $nama)
 
                     <option
-                        value="{{ $i }}"
-                        {{ request('bulan') == $i ? 'selected' : '' }}
+                        value="{{ $key }}"
+                        {{ request('bulan') == $key ? 'selected' : '' }}
                     >
 
-                        Bulan {{ $i }}
+                        {{ $nama }}
 
                     </option>
 
-                @endfor
+                @endforeach
 
             </select>
 
@@ -203,11 +224,11 @@
     </div>
 
     <!-- Chart -->
-    <div class="bg-white rounded-2xl shadow p-6 mb-8">
+    <div class="bg-white rounded-2xl shadow p-4 md:p-6 mb-8">
 
         <div class="flex justify-between items-center mb-5">
 
-            <h2 class="text-xl font-bold text-slate-700">
+            <h2 class="text-lg md:text-xl font-bold text-slate-700">
 
                 Grafik Pembayaran
 
@@ -215,7 +236,11 @@
 
         </div>
 
-        <canvas id="paymentChart"></canvas>
+        <div class="relative w-full h-[260px] md:h-[340px]">
+
+            <canvas id="paymentChart"></canvas>
+
+        </div>
 
     </div>
 
@@ -447,7 +472,7 @@ new Chart(
         options: {
 
             responsive: true,
-
+            maintainAspectRatio: false,
             scales: {
 
                 y: {
@@ -456,7 +481,7 @@ new Chart(
 
                     ticks: {
 
-                        stepSize: 500000,
+                        stepSize: 1000000,
 
                         callback: function(value) {
 

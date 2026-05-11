@@ -2,64 +2,129 @@
 
 @section('content')
 
-<div class="min-h-screen flex items-center justify-center">
+<div class="min-h-screen flex items-center justify-center px-4 py-10 bg-slate-100">
 
-    <div class="bg-white shadow rounded-2xl p-8 w-full max-w-md">
+    <div class="w-full max-w-md">
 
-        <h1 class="text-3xl font-bold text-center text-teal-600 mb-6">
-            Delima Residence
-        </h1>
+        <!-- Logo -->
+        <div class="text-center mb-8">
 
-        @if(session('error'))
+            <div class="w-20 h-20 bg-teal-600 rounded-3xl mx-auto
+                        flex items-center justify-center
+                        text-white text-4xl font-bold shadow-lg mb-5">
 
-            <div class="bg-red-100 text-red-700 p-3 rounded-lg mb-4">
-                {{ session('error') }}
+                D
+
             </div>
 
-        @endif
+            <h1 class="text-3xl font-bold text-slate-800">
 
-        <form method="POST" action="/login">
+                Delima Residence
 
-            @csrf
+            </h1>
 
-            <!-- Username -->
-            <div class="mb-4">
+            <p class="text-slate-500 mt-2">
 
-                <label class="block mb-2">
-                    Username
-                </label>
+                Sistem Pembayaran IPL Cluster
 
-                <input
-                    type="text"
-                    name="username"
-                    class="w-full rounded-xl border-gray-300"
+            </p>
+
+        </div>
+
+        <!-- Card -->
+        <div class="bg-white border border-slate-200 shadow rounded-2xl p-6 md:p-8">
+
+            <!-- Error -->
+            @if(session('error'))
+
+                <div
+                    class="bg-red-50 border border-red-200
+                    text-red-700 px-4 py-3 rounded-xl mb-6"
                 >
 
-            </div>
+                    {{ session('error') }}
 
-            <!-- Password -->
-            <div class="mb-6">
+                </div>
 
-                <label class="block mb-2">
-                    Password
-                </label>
+            @endif
 
-                <input
-                    type="password"
-                    name="password"
-                    class="w-full rounded-xl border-gray-300"
-                >
-
-            </div>
-
-            <!-- Button -->
-            <button
-                class="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-xl"
+            <!-- Form -->
+            <form
+                method="POST"
+                action="/login"
+                class="space-y-5"
             >
-                Login
-            </button>
 
-        </form>
+                @csrf
+
+                <!-- Username -->
+                <div>
+
+                    <label class="block text-sm font-semibold mb-2 text-slate-700">
+
+                        Username
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="username"
+                        autocomplete="username"
+                        required
+                        class="w-full rounded-lg border border-slate-300
+                        bg-white px-4 py-3
+                        focus:border-teal-500
+                        focus:ring-1
+                        focus:ring-teal-500"
+                    >
+
+                </div>
+
+                <!-- Password -->
+                <div>
+
+                    <label class="block text-sm font-semibold mb-2 text-slate-700">
+
+                        Password
+
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        autocomplete="current-password"
+                        required
+                        class="w-full rounded-lg border border-slate-300
+                        bg-white px-4 py-3
+                        focus:border-teal-500
+                        focus:ring-1
+                        focus:ring-teal-500"
+                    >
+
+                </div>
+
+                <!-- Button -->
+                <button
+                    type="submit"
+                    class="w-full bg-teal-600 hover:bg-teal-700
+                    text-white py-3 rounded-lg
+                    font-semibold transition shadow"
+                >
+
+                    Login
+
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-sm text-slate-400 mt-6">
+
+            © {{ date('Y') }} Delima Residence
+
+        </div>
 
     </div>
 

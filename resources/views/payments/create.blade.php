@@ -4,7 +4,7 @@
 
 <div class="max-w-2xl mx-auto py-10 px-4">
 
-    <div class="bg-white rounded-3xl shadow-xl p-8">
+    <div class="bg-white rounded-2xl shadow p-6 md:p-8 border border-slate-200">
 
         <!-- Header -->
         <div class="mb-8">
@@ -22,7 +22,7 @@
             </p>
 
             <!-- Welcome Card -->
-            <div class="bg-teal-50 border border-teal-200 rounded-3xl p-5 mb-8">
+            <div class="bg-teal-50 border border-teal-200 rounded-xl p-5 mb-8">
 
                 <div class="text-sm text-slate-500 mb-1">
                     Selamat Datang
@@ -165,7 +165,7 @@
                 <select
                     name="periode"
                     x-model="periode"
-                    class="w-full rounded-2xl border-slate-300 focus:border-teal-500 focus:ring-teal-500"
+                    class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
                     required
                 >
 
@@ -242,16 +242,18 @@
                 </label>
 
                 <input
-                    type="date"
-                    name="tanggal_ronda"
-                    class="w-full rounded-2xl border-slate-300 focus:border-teal-500 focus:ring-teal-500"
-                >
+                        type="date"
+                        name="tanggal_ronda"
+                        style="min-height:48px"
+                        class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3
+                        focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                    >
 
             </div>
 
             <!-- Rincian -->
             <div
-                class="bg-slate-50 rounded-3xl p-5 mb-6"
+                class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6"
                 x-show="ipl > 0"
                 x-transition
             >
@@ -352,19 +354,70 @@
 
                 </label>
 
+                <!-- Button Upload -->
+                <label
+                    for="bukti_bayar"
+                    class="flex flex-col items-center justify-center
+                    border border-dashed border-slate-300
+                    rounded-xl p-6 cursor-pointer
+                    hover:bg-slate-50 transition"
+                >
+
+                    <div class="text-4xl mb-3">
+
+                        📷
+
+                    </div>
+
+                    <div class="font-semibold text-slate-700">
+
+                        Ambil Foto / Upload Bukti
+
+                    </div>
+
+                    <div class="text-sm text-slate-500 mt-1">
+
+                        Kamera atau gallery
+
+                    </div>
+
+                </label>
+
+                <!-- Hidden Input -->
                 <input
                     type="file"
+                    id="bukti_bayar"
                     name="bukti_bayar"
-                    class="w-full"
+                    accept="image/*"
+                    class="hidden"
+                    @change="
+                        preview = URL.createObjectURL(
+                            $event.target.files[0]
+                        )
+                    "
                     required
                 >
+
+                <!-- Preview -->
+                <div
+                    x-show="preview"
+                    class="mt-4"
+                >
+
+                    <img
+                        :src="preview"
+                        class="rounded-xl border border-slate-200
+                        max-h-72 mx-auto"
+                    >
+
+                </div>
 
             </div>
 
             <!-- Submit -->
             <button
                 type="submit"
-                class="w-full bg-teal-600 hover:bg-teal-700 text-white py-4 rounded-2xl font-semibold transition"
+                class="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-lg font-semibold transition shadow"
             >
 
                 Kirim Pembayaran
@@ -387,6 +440,8 @@ const rukem =
 function paymentForm()
 {
     return {
+
+        preview: null,
 
         periode: '',
 

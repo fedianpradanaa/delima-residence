@@ -3,18 +3,63 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\PasswordController;
-use App\Http\Controllers\ImportPaymentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\ExpenseController;
+
+use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
+use App\Http\Controllers\Resident\PaymentController as ResidentPaymentController;
+
+use App\Http\Controllers\ImportPaymentController;
+use App\Http\Controllers\CashReportController;
 
 /*
 |--------------------------------------------------------------------------
-| LOGIN
+| ROOT
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', [
+Route::get('/', function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | BELUM LOGIN
+    |--------------------------------------------------------------------------
+    */
+
+    if (!auth()->check()) {
+
+        return redirect('/login');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN
+    |--------------------------------------------------------------------------
+    */
+
+    if (auth()->user()->role == 'admin') {
+
+        return redirect('/dashboard');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | WARGA
+    |--------------------------------------------------------------------------
+    */
+
+    return redirect('/payment');
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| AUTH
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/login', [
     AuthController::class,
     'login'
 ])->name('login');
@@ -31,7 +76,7 @@ Route::post('/logout', [
 
 /*
 |--------------------------------------------------------------------------
-| AUTH AREA
+| USER AREA
 |--------------------------------------------------------------------------
 */
 
@@ -50,34 +95,45 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | PAYMENT WARGA
+    | CASH REPORT
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/cash-report', [
+        CashReportController::class,
+        'index'
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | PAYMENT
     |--------------------------------------------------------------------------
     */
 
     Route::get('/payment', [
-        PaymentController::class,
+        ResidentPaymentController::class,
         'create'
     ]);
 
     Route::post('/payment', [
-        PaymentController::class,
+        ResidentPaymentController::class,
         'store'
     ]);
 
     /*
     |--------------------------------------------------------------------------
-    | HISTORY PEMBAYARAN
+    | HISTORY
     |--------------------------------------------------------------------------
     */
 
     Route::get('/payment-history', [
-        PaymentController::class,
+        ResidentPaymentController::class,
         'history'
     ]);
 
     /*
     |--------------------------------------------------------------------------
-    | CHANGE PASSWORD
+    | PASSWORD
     |--------------------------------------------------------------------------
     */
 
@@ -106,7 +162,7 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | IMPORT DATA LEGACY
+    | IMPORT PAYMENT
     |--------------------------------------------------------------------------
     */
 
@@ -122,29 +178,39 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | DATA PEMBAYARAN
+    | PAYMENTS
     |--------------------------------------------------------------------------
     */
 
     Route::get('/payments', [
-        PaymentController::class,
+        AdminPaymentController::class,
         'index'
     ]);
 
-    /*
-    |--------------------------------------------------------------------------
-    | VERIFIKASI
-    |--------------------------------------------------------------------------
-    */
-
     Route::get('/payment/{id}/verify', [
-        PaymentController::class,
+        AdminPaymentController::class,
         'verify'
     ]);
 
     Route::get('/payment/{id}/reject', [
-        PaymentController::class,
+        AdminPaymentController::class,
         'reject'
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | EXPENSES
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/expenses', [
+        ExpenseController::class,
+        'index'
+    ]);
+
+    Route::post('/expenses', [
+        ExpenseController::class,
+        'store'
     ]);
 
 });
