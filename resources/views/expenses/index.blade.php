@@ -2,12 +2,12 @@
 
 @section('content')
 
-<div class="max-w-7xl mx-auto p-4 md:p-6">
+<div class="max-w-7xl mx-auto px-4 py-6">
 
     <!-- Header -->
     <div class="mb-8">
 
-        <h1 class="text-2xl md:text-3xl font-bold text-teal-700">
+        <h1 class="text-3xl font-bold tracking-tight text-teal-700">
 
             Input Pengeluaran
 
@@ -22,13 +22,13 @@
     </div>
 
     <!-- Form -->
-    <div class="bg-white rounded-2xl shadow p-4 md:p-6 mb-8">
+    <div class="mb-8 rounded-[32px] border border-white/40 bg-white/70 p-5 shadow-2xl shadow-slate-200/60 backdrop-blur-xl md:p-8">
 
         <form
             action="/expenses"
             method="POST"
             enctype="multipart/form-data"
-            class="grid grid-cols-1 md:grid-cols-2 gap-5"
+            class="grid grid-cols-1 gap-5 md:grid-cols-2"
         >
 
             @csrf
@@ -45,8 +45,7 @@
                 <input
                     type="text"
                     name="nama"
-                    class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3
-                    focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                    class="h-14 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 transition focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-100"
                     required
                 >
 
@@ -64,8 +63,7 @@
                 <input
                     type="number"
                     name="nominal"
-                    class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3
-                    focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                    class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-100"
                     required
                 >
 
@@ -81,12 +79,38 @@
                 </label>
 
                 <input
-                    type="date"
-                    name="tanggal"
-                    class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3
-                    focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
-                    required
+                    type="file"
+                    id="bukti"
+                    name="bukti"
+                    accept="image/*"
+                    class="hidden"
                 >
+
+                <button
+                    type="button"
+                    onclick="document.getElementById('bukti').click()"
+                    class="w-full rounded-3xl border-2 border-dashed border-teal-200 bg-teal-50/50 p-6 text-center transition active:scale-[0.98] hover:bg-teal-50"
+                >
+
+                    <div class="mb-3 text-4xl">
+
+                        📷
+
+                    </div>
+
+                    <div class="font-semibold text-slate-700">
+
+                        Upload Bukti Pengeluaran
+
+                    </div>
+
+                    <div class="mt-1 text-sm text-slate-500">
+
+                        Kamera atau gallery
+
+                    </div>
+
+                </button>
 
             </div>
 
@@ -129,7 +153,7 @@
             <div class="md:col-span-2">
 
                 <button
-                    class="w-full md:w-auto bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl font-medium transition"
+                    class="h-14 w-full rounded-2xl bg-gradient-to-r from-teal-500 to-teal-700 px-6 font-semibold text-white shadow-xl shadow-teal-500/30 transition-all md:w-auto"
                 >
 
                     Simpan Pengeluaran
@@ -143,7 +167,7 @@
     </div>
 
     <!-- Table -->
-    <div class="bg-white rounded-2xl shadow overflow-hidden">
+    <div class="overflow-hidden rounded-[32px] border border-white/40 bg-white/70 shadow-2xl shadow-slate-200/60 backdrop-blur-xl">
 
         <!-- Header -->
         <div class="p-4 md:p-5 border-b">
@@ -161,7 +185,7 @@
 
             <table class="w-full min-w-[700px]">
 
-                <thead class="bg-teal-50">
+                <thead class="bg-teal-50/80 backdrop-blur">
 
                     <tr>
 
@@ -189,7 +213,7 @@
 
                     @forelse($expenses as $expense)
 
-                    <tr class="border-b hover:bg-slate-50 transition">
+                    <tr class="border-b border-slate-100 transition hover:bg-slate-50/70">
 
                         <!-- Tanggal -->
                         <td class="p-4 text-sm text-slate-600 whitespace-nowrap">
@@ -234,7 +258,7 @@
                             <a
                                 href="/{{ $expense->bukti }}"
                                 target="_blank"
-                                class="text-blue-600 hover:text-blue-700 underline"
+                                class="inline-flex rounded-xl bg-blue-50 px-3 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-100"
                             >
 
                                 Lihat Bukti

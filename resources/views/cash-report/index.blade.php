@@ -2,12 +2,12 @@
 
 @section('content')
 
-<div class="max-w-7xl mx-auto p-4 md:p-6">
+<div class="max-w-7xl mx-auto px-4 py-6">
 
     <!-- Header -->
     <div class="mb-8">
 
-        <h1 class="text-2xl md:text-3xl font-bold text-teal-700">
+        <h1 class="text-3xl font-bold tracking-tight text-teal-700">
 
             Laporan Kas Cluster
 
@@ -22,11 +22,11 @@
     </div>
 
     <!-- Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-5 mb-8">
+    <div class="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-5">
 
        @if(auth()->user()->role == 'admin')
         <!-- IPL -->
-        <div class="bg-white rounded-2xl shadow p-5">
+        <div class="rounded-3xl border border-white/40 bg-white/70 p-5 shadow-xl shadow-slate-200/60 backdrop-blur-xl">
 
             <div class="text-slate-500 text-sm">
 
@@ -34,7 +34,7 @@
 
             </div>
 
-            <div class="text-2xl font-bold mt-2 text-teal-700">
+            <div class="mt-3 text-3xl font-bold text-teal-700">
 
                 Rp {{ number_format($totalIPL) }}
 
@@ -44,7 +44,7 @@
         @endif
 
         <!-- Kas -->
-        <div class="bg-white rounded-2xl shadow p-5">
+        <div class="rounded-3xl border border-white/40 bg-white/70 p-5 shadow-xl shadow-slate-200/60 backdrop-blur-xl">
 
             <div class="text-slate-500 text-sm">
 
@@ -52,7 +52,7 @@
 
             </div>
 
-            <div class="text-2xl font-bold mt-2 text-green-600">
+            <div class="mt-3 text-3xl font-bold text-green-600">
 
                 Rp {{ number_format($totalKas) }}
 
@@ -63,7 +63,7 @@
 
         @if(auth()->user()->role == 'admin')
         <!-- Denda -->
-        <div class="bg-white rounded-2xl shadow p-5">
+        <div class="rounded-3xl border border-white/40 bg-white/70 p-5 shadow-xl shadow-slate-200/60 backdrop-blur-xl">
 
             <div class="text-slate-500 text-sm">
 
@@ -71,7 +71,7 @@
 
             </div>
 
-            <div class="text-2xl font-bold mt-2 text-orange-500">
+            <div class="mt-3 text-3xl font-bold text-orange-500">
 
                 Rp {{ number_format($totalDenda) }}
 
@@ -81,7 +81,7 @@
         @endif
 
         <!-- Pengeluaran -->
-        <div class="bg-white rounded-2xl shadow p-5">
+        <div class="rounded-3xl border border-white/40 bg-white/70 p-5 shadow-xl shadow-slate-200/60 backdrop-blur-xl">
 
             <div class="text-slate-500 text-sm">
 
@@ -89,7 +89,7 @@
 
             </div>
 
-            <div class="text-2xl font-bold mt-2 text-red-600">
+            <div class="mt-3 text-3xl font-bold text-red-600">
 
                 Rp {{ number_format($totalPengeluaran) }}
 
@@ -98,7 +98,7 @@
         </div>
 
         <!-- Saldo -->
-        <div class="bg-white rounded-2xl shadow p-5">
+        <div class="rounded-3xl border border-white/40 bg-white/70 p-5 shadow-xl shadow-slate-200/60 backdrop-blur-xl">
 
             <div class="text-slate-500 text-sm">
 
@@ -106,7 +106,7 @@
 
             </div>
 
-            <div class="text-2xl font-bold mt-2 text-blue-600">
+            <div class="mt-3 text-3xl font-bold text-blue-600">
 
                 Rp {{ number_format($saldoKas) }}
 
@@ -117,15 +117,15 @@
     </div>
 
     <!-- Chart -->
-    <div class="bg-white rounded-2xl shadow p-4 md:p-6 mb-8">
+    <div class="mb-8 rounded-3xl border border-white/40 bg-white/70 p-5 shadow-2xl shadow-slate-200/60 backdrop-blur-xl md:p-8">
 
         <h2 class="text-lg md:text-xl font-bold text-slate-700 mb-5">
 
-            Grafik Kas Bulanan
+            Trend Kas Bulanan
 
         </h2>
 
-        <div class="relative w-full h-[300px]">
+        <div class="relative w-full h-[220px] md:h-[300px]">
 
             <canvas id="cashChart"></canvas>
 
@@ -133,14 +133,14 @@
 
     </div>
 
-    @if(auth()->user()->role == 'admin')
     <!-- Table -->
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
 
+        @if(auth()->user()->role == 'admin')
         <!-- Pemasukan -->
-        <div class="bg-white rounded-2xl shadow overflow-hidden">
+        <div class="overflow-hidden rounded-3xl border border-white/40 bg-white/70 shadow-2xl shadow-slate-200/60 backdrop-blur-xl">
 
-            <div class="p-5 border-b">
+            <div class="border-b border-slate-100 p-5">
 
                 <h2 class="font-bold text-slate-700">
 
@@ -154,7 +154,7 @@
 
                 <table class="w-full min-w-[600px]">
 
-                    <thead class="bg-teal-50">
+                    <thead class="bg-teal-50/80 backdrop-blur">
 
                         <tr>
 
@@ -178,21 +178,21 @@
 
                         @foreach($payments as $payment)
 
-                        <tr class="border-b">
+                        <tr class="border-b border-slate-100 transition hover:bg-slate-50/70">
 
-                            <td class="p-4">
+                            <td class="p-3 md:p-4 whitespace-nowrap">
 
                                 {{ $payment->bulan }}/{{ $payment->tahun }}
 
                             </td>
 
-                            <td class="p-4">
+                            <td class="p-3 md:p-4 whitespace-nowrap">
 
                                 Rp {{ number_format($payment->nominal_ipl) }}
 
                             </td>
 
-                            <td class="p-4">
+                            <td class="p-3 md:p-4 whitespace-nowrap">
 
                                 Rp {{ number_format($payment->nominal_kas) }}
 
@@ -209,11 +209,12 @@
             </div>
 
         </div>
+        @endif
 
         <!-- Pengeluaran -->
-        <div class="bg-white rounded-2xl shadow overflow-hidden">
+        <div class="overflow-hidden rounded-3xl border border-white/40 bg-white/70 shadow-2xl shadow-slate-200/60 backdrop-blur-xl">
 
-            <div class="p-5 border-b">
+            <div class="border-b border-slate-100 p-5">
 
                 <h2 class="font-bold text-slate-700">
 
@@ -225,21 +226,21 @@
 
             <div class="overflow-x-auto">
 
-                <table class="w-full min-w-[600px]">
+                <table class="w-full min-w-[500px] md:min-w-[600px] text-sm md:text-base">
 
-                    <thead class="bg-red-50">
+                    <thead class="bg-red-50/80 backdrop-blur">
 
                         <tr>
 
-                            <th class="p-4 text-left">
+                            <th class="p-3 md:p-4 text-left whitespace-nowrap">
                                 Tanggal
                             </th>
 
-                            <th class="p-4 text-left">
+                            <th class="p-3 md:p-4 text-left whitespace-nowrap">
                                 Nama
                             </th>
 
-                            <th class="p-4 text-left">
+                            <th class="p-3 md:p-4 text-left whitespace-nowrap">
                                 Nominal
                             </th>
 
@@ -251,21 +252,21 @@
 
                         @foreach($expenses as $expense)
 
-                        <tr class="border-b">
+                        <tr class="border-b border-slate-100 transition hover:bg-slate-50/70">
 
-                            <td class="p-4">
+                            <td class="p-3 md:p-4 whitespace-nowrap">
 
                                 {{ $expense->tanggal }}
 
                             </td>
 
-                            <td class="p-4">
+                            <td class="p-3 md:p-4">
 
                                 {{ $expense->nama }}
 
                             </td>
 
-                            <td class="p-4 text-red-600 font-bold">
+                            <td class="p-3 md:p-4 text-red-600 font-bold whitespace-nowrap">
 
                                 Rp {{ number_format($expense->nominal) }}
 
@@ -284,14 +285,13 @@
         </div>
 
     </div>
-    @endif
 
-    <!-- Summary Bulanan -->
-<div class="bg-white rounded-2xl shadow overflow-hidden mb-8">
+<!-- Summary Bulanan -->
+<div class="mt-6 mb-8 overflow-hidden rounded-3xl border border-white/40 bg-white/70 shadow-2xl shadow-slate-200/60 backdrop-blur-xl">
 
-    <div class="p-5 border-b">
+    <div class="border-b border-slate-100 p-5">
 
-        <h2 class="text-xl font-bold text-slate-700">
+        <h2 class="font-bold text-slate-700">
 
             Summary Kas Bulanan
 
@@ -301,25 +301,25 @@
 
     <div class="overflow-x-auto">
 
-        <table class="w-full min-w-[700px]">
+        <table class="w-full min-w-[700px] text-sm md:text-base">
 
-            <thead class="bg-teal-50">
+            <thead class="bg-teal-50/80 backdrop-blur">
 
                 <tr>
 
-                    <th class="p-4 text-left">
+                    <th class="p-3 md:p-4 text-left whitespace-nowrap">
                         Bulan
                     </th>
 
-                    <th class="p-4 text-left">
+                    <th class="p-3 md:p-4 text-left whitespace-nowrap">
                         Pemasukan Kas
                     </th>
 
-                    <th class="p-4 text-left">
+                    <th class="p-3 md:p-4 text-left whitespace-nowrap">
                         Pengeluaran
                     </th>
 
-                    <th class="p-4 text-left">
+                    <th class="p-3 md:p-4 text-left whitespace-nowrap">
                         Saldo
                     </th>
 
@@ -331,9 +331,9 @@
 
                 @foreach($monthlySummary as $item)
 
-                <tr class="border-b hover:bg-slate-50">
+                <tr class="border-b border-slate-100 transition hover:bg-slate-50/70">
 
-                    <td class="p-4">
+                    <td class="p-3 md:p-4 whitespace-nowrap">
 
                         {{ \Carbon\Carbon::create()
                             ->month($item['bulan'])
@@ -396,13 +396,25 @@ new Chart(
 
             datasets: [{
 
-                label: 'Kas',
+            label: 'Kas',
 
-                data: kas,
+            data: kas,
 
-                tension: 0.4
+            tension: 0.4,
 
-            }]
+            fill: true,
+
+            borderWidth: 3,
+
+            pointRadius: 4,
+
+            pointHoverRadius: 6,
+
+            backgroundColor: 'rgba(20,184,166,0.12)',
+
+            borderColor: '#0f766e'
+
+        }]
         },
 
         options: {
@@ -411,13 +423,55 @@ new Chart(
 
             maintainAspectRatio: false,
 
+            interaction: {
+
+                mode: 'index',
+
+                intersect: false
+
+            },
+
+            plugins: {
+
+                legend: {
+
+                    display: false
+
+                }
+
+            },
+
             scales: {
+
+                x: {
+
+                    grid: {
+
+                        display: false
+
+                    },
+
+                    ticks: {
+
+                        color: '#64748b'
+
+                    }
+
+                },
 
                 y: {
 
                     beginAtZero: true,
 
+                    grid: {
+
+                        color: 'rgba(148,163,184,0.08)'
+
+                    },
+
                     ticks: {
+
+                        color: '#64748b',
 
                         stepSize: 100000,
 

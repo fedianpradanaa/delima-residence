@@ -2,12 +2,12 @@
 
 @section('content')
 
-<div class="max-w-7xl mx-auto py-10 px-4">
+<div class="max-w-7xl mx-auto px-4 py-6">
 
     <!-- Header -->
     <div class="mb-8">
 
-        <h1 class="text-3xl font-bold text-teal-700">
+        <h1 class="text-3xl font-bold tracking-tight text-teal-700">
 
             Riwayat Pembayaran
 
@@ -22,7 +22,7 @@
     </div>
 
     <!-- Profile -->
-    <div class="bg-white rounded-2xl shadow p-6 mb-6">
+    <div class="mb-6 rounded-3xl border border-white/40 bg-gradient-to-br from-teal-500 to-teal-700 p-6 text-white shadow-xl shadow-teal-500/20">
 
         <div class="flex items-center justify-between flex-wrap gap-4">
 
@@ -34,7 +34,7 @@
 
                 </div>
 
-                <div class="text-slate-500">
+                <div class="text-teal-100">
 
                     Blok
                     {{ auth()->user()->resident->alamat }}
@@ -48,14 +48,14 @@
     </div>
 
     <!-- Card -->
-    <div class="bg-white rounded-2xl shadow overflow-hidden">
+    <div class="overflow-hidden rounded-2xl border border-white/40 bg-white/70 shadow-2xl shadow-slate-200/60 backdrop-blur-xl">
 
         <div class="overflow-x-auto">
 
-            <table class="w-full min-w-[900px]">
+            <table class="w-full min-w-[850px] text-sm md:text-base">
 
                 <!-- Head -->
-                <thead class="bg-teal-50">
+                <thead class="bg-teal-50/80 backdrop-blur">
 
                     <tr>
 
@@ -96,7 +96,7 @@
 
                     @forelse($payments as $payment)
 
-                    <tr class="border-b hover:bg-slate-50">
+                    <tr class="border-b border-slate-100 transition hover:bg-slate-50/70">
 
                         <!-- Periode -->
                         <td class="p-4 font-semibold">
@@ -131,7 +131,7 @@
                         </td>
 
                         <!-- Total -->
-                        <td class="p-4 font-bold text-teal-700">
+                        <td class="p-4 text-base font-bold text-teal-700">
 
                             Rp {{ number_format($payment->total) }}
 
@@ -142,7 +142,7 @@
 
                             @if($payment->status_verifikasi == 'pending')
 
-                                <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
+                                <span class="inline-flex rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700">
 
                                     Pending
 
@@ -150,7 +150,7 @@
 
                             @elseif($payment->status_verifikasi == 'diterima')
 
-                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                                <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
 
                                     Diterima
 
@@ -158,7 +158,7 @@
 
                             @else
 
-                                <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm">
+                                <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
 
                                     Ditolak
 
@@ -174,7 +174,7 @@
                             <a
                                 href="/{{ $payment->bukti_bayar }}"
                                 target="_blank"
-                                class="text-blue-600 underline"
+                                class="inline-flex rounded-xl bg-blue-50 px-3 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-100"
                             >
 
                                 Lihat Bukti
@@ -191,7 +191,7 @@
 
                         <td
                             colspan="7"
-                            class="p-8 text-center text-slate-500"
+                            class="p-10 text-center text-slate-400"
                         >
 
                             Belum ada pembayaran

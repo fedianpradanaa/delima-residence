@@ -2,14 +2,14 @@
 
 @section('content')
 
-<div class="max-w-2xl mx-auto py-10 px-4">
+<div class="max-w-2xl mx-auto px-4 py-6 pb-28 md:pb-6">
 
-    <div class="bg-white rounded-2xl shadow p-6 md:p-8 border border-slate-200">
+    <div class="glass rounded-[32px] border border-white/40 p-5 shadow-2xl shadow-slate-200/60 md:p-8">
 
         <!-- Header -->
         <div class="mb-8">
 
-            <h1 class="text-3xl font-bold text-teal-700 mb-2">
+            <h1 class="mb-2 text-3xl font-bold tracking-tight text-teal-700">
 
                 Upload Pembayaran
 
@@ -22,23 +22,23 @@
             </p>
 
             <!-- Welcome Card -->
-            <div class="bg-teal-50 border border-teal-200 rounded-xl p-5 mb-8">
+            <div class="mb-8 rounded-3xl bg-gradient-to-br from-teal-500 to-teal-700 p-6 text-white shadow-xl shadow-teal-500/20">
 
-                <div class="text-sm text-slate-500 mb-1">
+                <div class="mb-1 text-sm text-teal-100">
                     Selamat Datang
                 </div>
 
-                <div class="text-2xl font-bold text-teal-700 mb-3">
+                <div class="mb-4 text-2xl font-bold text-white">
 
                     {{ auth()->user()->name }}
 
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-4 text-sm">
+                <div class="flex flex-wrap gap-4 text-sm">
 
-                    <div>
+                    <div class="min-w-[140px] flex-1">
 
-                        <div class="text-slate-500">
+                        <div class="text-teal-100">
                             Rumah
                         </div>
 
@@ -50,9 +50,9 @@
 
                     </div>
 
-                    <div>
+                    <div class="min-w-[140px] flex-1">
 
-                        <div class="text-slate-500">
+                        <div class="text-teal-100">
                             Username
                         </div>
 
@@ -165,7 +165,7 @@
                 <select
                     name="periode"
                     x-model="periode"
-                    class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                    class="h-14 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 transition focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-100"
                     required
                 >
 
@@ -192,7 +192,11 @@
             </div>
 
             <!-- Status Ronda -->
-            <div class="mb-5">
+            <div
+                class="mb-5"
+                x-show="periode"
+                x-transition
+            >
 
                 <label class="block font-semibold mb-3">
 
@@ -200,7 +204,7 @@
 
                 </label>
 
-                <label class="flex items-center gap-3 mb-3">
+                <label class="mb-3 flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
 
                     <input
                         type="radio"
@@ -213,7 +217,7 @@
 
                 </label>
 
-                <label class="flex items-center gap-3">
+                <label class="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
 
                     <input
                         type="radio"
@@ -245,15 +249,14 @@
                         type="date"
                         name="tanggal_ronda"
                         style="min-height:48px"
-                        class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3
-                        focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                        class="h-14 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 transition focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-100"
                     >
 
             </div>
 
             <!-- Rincian -->
             <div
-                class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6"
+                class="mb-6 rounded-3xl border border-white/40 bg-white/70 p-5 shadow-lg backdrop-blur-xl"
                 x-show="ipl > 0"
                 x-transition
             >
@@ -344,26 +347,60 @@
             <!-- Upload -->
             <div
                 class="mb-6"
+                x-data="{ openPicker:false }"
                 x-show="ipl > 0"
                 x-transition
             >
 
-                <label class="block mb-2 font-semibold">
+                <label class="mb-3 block font-semibold">
 
-                    Upload Bukti Pembayaran
+                    Bukti Pembayaran
 
                 </label>
 
-                <!-- Button Upload -->
-                <label
-                    for="bukti_bayar"
-                    class="flex flex-col items-center justify-center
-                    border border-dashed border-slate-300
-                    rounded-xl p-6 cursor-pointer
-                    hover:bg-slate-50 transition"
+                <!-- INPUT CAMERA -->
+                <input
+                    type="file"
+                    id="camera_input"
+                    name="bukti_bayar"
+                    accept="image/*"
+                    capture="environment"
+                    class="hidden"
+                    @change="
+                        if($event.target.files.length > 0)
+                        {
+                            preview = URL.createObjectURL(
+                                $event.target.files[0]
+                            )
+                        }
+                    "
                 >
 
-                    <div class="text-4xl mb-3">
+                <!-- INPUT GALLERY -->
+                <input
+                    type="file"
+                    id="gallery_input"
+                    name="bukti_bayar"
+                    accept="image/*"
+                    class="hidden"
+                    @change="
+                        if($event.target.files.length > 0)
+                        {
+                            preview = URL.createObjectURL(
+                                $event.target.files[0]
+                            )
+                        }
+                    "
+                >
+
+                <!-- BUTTON -->
+                <button
+                    type="button"
+                    @click="openPicker = true"
+                    class="w-full rounded-3xl border-2 border-dashed border-teal-200 bg-teal-50/50 p-6 text-center transition active:scale-[0.98] hover:bg-teal-50"
+                >
+
+                    <div class="mb-3 text-4xl">
 
                         📷
 
@@ -371,53 +408,88 @@
 
                     <div class="font-semibold text-slate-700">
 
-                        Ambil Foto / Upload Bukti
+                        Pilih Foto Pembayaran
 
                     </div>
 
-                    <div class="text-sm text-slate-500 mt-1">
+                    <div class="mt-1 text-sm text-slate-500">
 
                         Kamera atau gallery
 
                     </div>
 
-                </label>
+                </button>
 
-                <!-- Hidden Input -->
-                <input
-                    type="file"
-                    id="bukti_bayar"
-                    name="bukti_bayar"
-                    accept="image/*"
-                    class="hidden"
-                    @change="
-                        preview = URL.createObjectURL(
-                            $event.target.files[0]
-                        )
-                    "
-                    required
-                >
-
-                <!-- Preview -->
+                <!-- MODAL PICKER -->
                 <div
-                    x-show="preview"
-                    class="mt-4"
+                    x-show="openPicker"
+                    x-transition
+                    class="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4"
                 >
 
-                    <img
-                        :src="preview"
-                        class="rounded-xl border border-slate-200
-                        max-h-72 mx-auto"
+                    <div
+                        @click.away="openPicker = false"
+                        class="w-full max-w-md rounded-3xl bg-white p-4 shadow-2xl"
                     >
 
+                        <div class="mb-4 text-center text-lg font-bold">
+
+                            Pilih Sumber Foto
+
+                        </div>
+
+                        <!-- CAMERA -->
+                        <button
+                            type="button"
+                            @click="
+                                document.getElementById('camera_input').click();
+                                openPicker = false;
+                            "
+                            class="mb-3 w-full rounded-2xl bg-teal-600 px-4 py-4 font-semibold text-white"
+                        >
+
+                            📷 Ambil dari Kamera
+
+                        </button>
+
+                        <!-- GALLERY -->
+                        <button
+                            type="button"
+                            @click="
+                                document.getElementById('gallery_input').click();
+                                openPicker = false;
+                            "
+                            class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-4 font-semibold text-slate-700"
+                        >
+
+                            🖼 Ambil dari Gallery
+
+                        </button>
+
+                    </div>
+
                 </div>
+
+                <!-- PREVIEW -->
+                <template x-if="preview">
+
+                    <div class="mt-4">
+
+                        <img
+                            :src="preview"
+                            class="w-full rounded-3xl border border-slate-200 shadow-lg"
+                        >
+
+                    </div>
+
+                </template>
 
             </div>
 
             <!-- Submit -->
             <button
                 type="submit"
-                class="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-lg font-semibold transition shadow"
+                class="h-14 w-full rounded-2xl bg-gradient-to-r from-teal-500 to-teal-700 font-semibold text-white shadow-xl shadow-teal-500/30 transition-all"
             >
 
                 Kirim Pembayaran
