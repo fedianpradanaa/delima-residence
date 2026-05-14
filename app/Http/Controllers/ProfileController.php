@@ -2,59 +2,60 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): View
+    public function index()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        return view('account');
     }
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request)
     {
-        $request->user()->fill($request->validated());
+        $request->validate(
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+            [
+                'email' => [
+                    'required',
+                    'email:rfc,dns',
+                    'unique:users,email,' . auth()->id(),
+                ],
+
+                'password' => [
+                    'nullable',
+                    'min:6',
+                    'confirmed',
+                ],
+
+            ],
+
+            [
+                'email.required' => 'Email wajib diisi',
+                'email.email' => 'Format email tidak valid',
+                'email.unique' => 'Email sudah digunakan',
+
+                'password.min' => 'Password minimal 6 karakter',
+                'password.confirmed' => 'Konfirmasi password tidak sama',
+            ]
+
+        );
+
+        $user = auth()->user();
+
+        $user->email = $request->email;
+
+        if ($request->filled('password')) {
+
+            $user->password = bcrypt($request->password);
+
         }
 
-        $request->user()->save();
+        $user->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return back()->with(
+            'success',
+            'Akun berhasil diperbarui'
+        );
     }
 }

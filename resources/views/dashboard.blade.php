@@ -23,83 +23,91 @@
 
         </div>
 
-        <!-- Filter -->
-        <form
-            method="GET"
-            action="/dashboard"
-            class="flex flex-col md:flex-row gap-3"
-        >
+        <!-- Filter Card -->
+<div class="mb-8 rounded-3xl border border-white/40 bg-white/70 p-4 shadow-lg backdrop-blur-xl">
+
+    <form
+        method="GET"
+        action="/dashboard"
+        class="flex flex-col sm:flex-row gap-3"
+    >
+
+        @php
+        $bulanList = [
+            1  => 'Januari',
+            2  => 'Februari',
+            3  => 'Maret',
+            4  => 'April',
+            5  => 'Mei',
+            6  => 'Juni',
+            7  => 'Juli',
+            8  => 'Agustus',
+            9  => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ];
+        @endphp
+
+        <!-- BULAN -->
+        <div class="relative w-full">
+
+            <!-- ICON -->
+            <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                📅
+            </div>
 
             <select
                 name="bulan"
-                class="rounded-xl border-slate-300"
+                class="w-full h-12 rounded-2xl border border-slate-200 bg-white pl-12 pr-4 text-slate-700 shadow-sm
+                focus:outline-none focus:ring-4 focus:ring-teal-100 focus:border-teal-500"
             >
-
-                @php
-
-                $bulanList = [
-
-                    1  => 'Januari',
-                    2  => 'Februari',
-                    3  => 'Maret',
-                    4  => 'April',
-                    5  => 'Mei',
-                    6  => 'Juni',
-                    7  => 'Juli',
-                    8  => 'Agustus',
-                    9  => 'September',
-                    10 => 'Oktober',
-                    11 => 'November',
-                    12 => 'Desember',
-
-                ];
-
-                @endphp
-
                 @foreach($bulanList as $key => $nama)
-
-                    <option
-                        value="{{ $key }}"
+                    <option value="{{ $key }}"
                         {{ request('bulan') == $key ? 'selected' : '' }}
                     >
-
                         {{ $nama }}
-
                     </option>
-
                 @endforeach
-
             </select>
+
+        </div>
+
+        <!-- TAHUN -->
+        <div class="relative w-full">
+
+            <!-- ICON -->
+            <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                📆
+            </div>
 
             <select
                 name="tahun"
-                class="rounded-xl border-slate-300"
+                class="w-full h-12 rounded-2xl border border-slate-200 bg-white pl-12 pr-4 text-slate-700 shadow-sm
+                focus:outline-none focus:ring-4 focus:ring-teal-100 focus:border-teal-500"
             >
-
                 @for($i = 2025; $i <= 2035; $i++)
-
-                    <option
-                        value="{{ $i }}"
+                    <option value="{{ $i }}"
                         {{ request('tahun') == $i ? 'selected' : '' }}
                     >
-
                         {{ $i }}
-
                     </option>
-
                 @endfor
-
             </select>
 
-            <button
-                class="bg-teal-600 hover:bg-teal-700 text-white px-5 rounded-xl"
-            >
+        </div>
 
-                Filter
+        <!-- BUTTON -->
+        <button
+            class="h-12 px-6 rounded-2xl bg-gradient-to-r from-teal-500 to-teal-700 text-white font-semibold shadow-lg shadow-teal-500/20
+            hover:scale-[1.02] active:scale-95 transition"
+        >
+            Filter
+        </button>
 
-            </button>
+    </form>
 
-        </form>
+</div>
 
     </div>
 

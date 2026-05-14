@@ -24,10 +24,10 @@
         </div>
 
         <!-- Statistik -->
-        <div class="grid md:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
 
             <!-- Total Warga -->
-            <div class="bg-white rounded-3xl shadow-sm p-6">
+            <div class="rounded-[28px] border border-white/60 bg-white/90 p-6 shadow-xl shadow-slate-200/50 backdrop-blur-xl transition hover:-translate-y-1 hover:shadow-2xl">
 
                 <div class="text-teal-600 text-4xl mb-4">
                     🏠
@@ -46,7 +46,7 @@
             </div>
 
             <!-- Total Pembayaran -->
-            <div class="bg-white rounded-3xl shadow-sm p-6">
+            <div class="rounded-[28px] border border-white/60 bg-white/90 p-6 shadow-xl shadow-slate-200/50 backdrop-blur-xl transition hover:-translate-y-1 hover:shadow-2xl">
 
                 <div class="text-teal-600 text-4xl mb-4">
                     💳
@@ -65,7 +65,7 @@
             </div>
 
             <!-- Pending -->
-            <div class="bg-white rounded-3xl shadow-sm p-6">
+            <div class="rounded-[28px] border border-white/60 bg-white/90 p-6 shadow-xl shadow-slate-200/50 backdrop-blur-xl transition hover:-translate-y-1 hover:shadow-2xl">
 
                 <div class="text-yellow-500 text-4xl mb-4">
                     ⏳
@@ -84,7 +84,7 @@
             </div>
 
             <!-- Kas -->
-            <div class="bg-white rounded-3xl shadow-sm p-6">
+            <div class="rounded-[28px] border border-white/60 bg-white/90 p-6 shadow-xl shadow-slate-200/50 backdrop-blur-xl transition hover:-translate-y-1 hover:shadow-2xl">
 
                 <div class="text-green-600 text-4xl mb-4">
                     💰
@@ -105,95 +105,192 @@
         </div>
 
         <!-- Filter -->
-        <div class="bg-white rounded-3xl shadow-sm p-6 mb-8">
+        <div class="mb-8 overflow-hidden rounded-[32px] bg-white shadow-sm">
 
-            <form
-                method="GET"
-                action="/payments"
-                class="grid md:grid-cols-4 gap-4"
+            <!-- Header -->
+            <div
+                class="border-b border-slate-100 bg-gradient-to-r from-teal-600 to-emerald-600 px-6 py-5 text-white"
             >
 
-                <!-- Search -->
-                <input
-                    type="text"
-                    name="search"
-                    value="{{ $search }}"
-                    placeholder="Cari nama warga..."
-                    class="rounded-2xl border-slate-300 focus:border-teal-500 focus:ring-teal-500"
+                <h2 class="text-xl font-bold">
+
+                    Filter Pembayaran
+
+                </h2>
+
+                <p class="mt-1 text-sm text-white/80">
+
+                    Cari dan filter data pembayaran warga
+
+                </p>
+
+            </div>
+
+            <!-- Content -->
+            <div class="p-6">
+
+                <form
+                    method="GET"
+                    action="/payments"
+                    class="grid gap-5 md:grid-cols-4"
                 >
 
-                <!-- Bulan -->
-                <select
-                    name="bulan"
-                    class="rounded-2xl border-slate-300 focus:border-teal-500 focus:ring-teal-500"
-                >
+                    <!-- Search -->
+                    <div>
 
-                    <option value="">
-                        Semua Bulan
-                    </option>
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
 
-                    @for($i = 1; $i <= 12; $i++)
+                            Cari Warga
 
-                        <option
-                            value="{{ $i }}"
-                            {{ $bulan == $i ? 'selected' : '' }}
+                        </label>
+
+                        <div class="relative">
+
+                            <span
+                                class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                            >
+
+                                🔍
+
+                            </span>
+
+                            <input
+                                type="text"
+                                name="search"
+                                value="{{ $search }}"
+                                placeholder="Nama warga..."
+                                class="h-14 w-full rounded-2xl border border-slate-200 bg-slate-50 pl-12 pr-4 text-sm shadow-sm transition focus:border-teal-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-teal-100"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- Bulan -->
+                    <div>
+
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
+
+                            Pilih Bulan
+
+                        </label>
+
+                        <select
+                            name="bulan"
+                            class="h-14 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm shadow-sm transition focus:border-teal-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-teal-100"
                         >
 
-                            Bulan {{ $i }}
+                            <option value="">
+                                Semua Bulan
+                            </option>
 
-                        </option>
+                            @php
+                                $bulanList = [
+                                    1 => 'Januari',
+                                    2 => 'Februari',
+                                    3 => 'Maret',
+                                    4 => 'April',
+                                    5 => 'Mei',
+                                    6 => 'Juni',
+                                    7 => 'Juli',
+                                    8 => 'Agustus',
+                                    9 => 'September',
+                                    10 => 'Oktober',
+                                    11 => 'November',
+                                    12 => 'Desember',
+                                ];
+                            @endphp
 
-                    @endfor
+                            @foreach($bulanList as $key => $nama)
 
-                </select>
+                                <option
+                                    value="{{ $key }}"
+                                    {{ $bulan == $key ? 'selected' : '' }}
+                                >
 
-                <!-- Tahun -->
-                <select
-                    name="tahun"
-                    class="rounded-2xl border-slate-300 focus:border-teal-500 focus:ring-teal-500"
-                >
+                                    {{ $nama }}
 
-                    <option value="">
-                        Semua Tahun
-                    </option>
+                                </option>
 
-                    @for($i = 2026; $i <= 2035; $i++)
+                            @endforeach
 
-                        <option
-                            value="{{ $i }}"
-                            {{ $tahun == $i ? 'selected' : '' }}
+                        </select>
+
+                    </div>
+
+                    <!-- Tahun -->
+                    <div>
+
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
+
+                            Pilih Tahun
+
+                        </label>
+
+                        <select
+                            name="tahun"
+                            class="h-14 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm shadow-sm transition focus:border-teal-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-teal-100"
                         >
 
-                            {{ $i }}
+                            <option value="">
+                                Semua Tahun
+                            </option>
 
-                        </option>
+                            @for($i = 2026; $i <= 2035; $i++)
 
-                    @endfor
+                                <option
+                                    value="{{ $i }}"
+                                    {{ $tahun == $i ? 'selected' : '' }}
+                                >
 
-                </select>
+                                    {{ $i }}
 
-                <!-- Button -->
-                <button
-                    class="bg-teal-600 hover:bg-teal-700 transition text-white rounded-2xl px-4 py-2 font-semibold"
-                >
+                                </option>
 
-                    Filter Data
+                            @endfor
 
-                </button>
+                        </select>
 
-            </form>
+                    </div>
+
+                    <!-- Button -->
+                    <div class="flex items-end">
+
+                        <button
+                            class="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 px-5 font-semibold text-white shadow-lg shadow-teal-500/20 transition hover:scale-[1.02] hover:shadow-xl active:scale-95"
+                        >
+
+                            <span>
+
+                                🔎
+
+                            </span>
+
+                            <span>
+
+                                Filter Data
+
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
 
         </div>
 
         <!-- Table -->
-        <div class="bg-white rounded-3xl shadow-sm overflow-hidden">
+        <div class="overflow-hidden rounded-[30px] border border-white/60 bg-white/90 shadow-xl shadow-slate-200/50 backdrop-blur-xl">
 
             <div class="overflow-x-auto">
 
                 <table class="w-full">
 
                     <!-- Head -->
-                    <thead class="bg-teal-50">
+                    <thead class="bg-gradient-to-r from-teal-50 to-cyan-50">
 
                         <tr>
 
@@ -230,7 +327,7 @@
 
                         @forelse($payments as $payment)
 
-                        <tr class="border-b hover:bg-slate-50 transition">
+                        <tr class="border-b border-slate-100 hover:bg-teal-50/40 transition-all duration-200">
 
                             <!-- Warga -->
                             <td class="p-4">
@@ -316,27 +413,47 @@
                             <!-- Aksi -->
                             <td class="p-4">
 
-                                <div class="flex gap-2">
+                                @if($payment->status_verifikasi == 'pending')
 
-                                    <a
-                                        href="/payment/{{ $payment->id }}/verify"
-                                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm transition"
-                                    >
+                                    <div class="flex gap-2">
 
-                                        Terima
+                                        <a
+                                            href="/payment/{{ $payment->id }}/verify"
+                                            class="rounded-xl bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-green-500/20 transition hover:-translate-y-0.5 hover:bg-green-700"
+                                        >
 
-                                    </a>
+                                            Terima
 
-                                    <a
-                                        href="/payment/{{ $payment->id }}/reject"
-                                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-sm transition"
-                                    >
+                                        </a>
 
-                                        Tolak
+                                        <a
+                                            href="/payment/{{ $payment->id }}/reject"
+                                            class="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-red-500/20 transition hover:-translate-y-0.5 hover:bg-red-700"
+                                        >
 
-                                    </a>
+                                            Tolak
 
-                                </div>
+                                        </a>
+
+                                    </div>
+
+                                @elseif($payment->status_verifikasi == 'diterima')
+
+                                    <span class="text-green-600 font-semibold">
+
+                                        Sudah Diverifikasi
+
+                                    </span>
+
+                                @else
+
+                                    <span class="text-red-600 font-semibold">
+
+                                        Pembayaran Ditolak
+
+                                    </span>
+
+                                @endif
 
                             </td>
 
@@ -362,6 +479,38 @@
                     </tbody>
 
                 </table>
+
+                <div class="border-t border-slate-100 bg-slate-50/80 px-6 py-5">
+
+                    <div class="flex items-center justify-between">
+
+                        <div class="text-sm text-slate-500">
+
+                            Menampilkan
+                            <span class="font-semibold text-slate-700">
+                                {{ $payments->firstItem() }}
+                            </span>
+                            -
+                            <span class="font-semibold text-slate-700">
+                                {{ $payments->lastItem() }}
+                            </span>
+                            dari
+                            <span class="font-semibold text-slate-700">
+                                {{ $payments->total() }}
+                            </span>
+                            data
+
+                        </div>
+
+                        <div>
+
+                            {{ $payments->onEachSide(1)->links() }}
+
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
 

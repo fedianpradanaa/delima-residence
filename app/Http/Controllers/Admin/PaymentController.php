@@ -47,22 +47,26 @@ class PaymentController extends Controller
 
             ->latest()
 
-            ->get();
+            ->paginate(10)
+
+            ->withQueryString();
 
         $totalWarga = Resident::where(
             'status_rumah',
             'DITEMPATI'
         )->count();
 
-        $totalPembayaran = $payments->count();
+        $totalPembayaran = Payment::count();
 
-        $totalPending = $payments
-            ->where('status_verifikasi', 'pending')
-            ->count();
+        $totalPending = Payment::where(
+            'status_verifikasi',
+            'pending'
+        )->count();
 
-        $totalKasMasuk = $payments
-            ->where('status_verifikasi', 'diterima')
-            ->sum('total');
+        $totalKasMasuk = Payment::where(
+            'status_verifikasi',
+            'diterima'
+        )->sum('total');
 
         return view(
             'payments.index',

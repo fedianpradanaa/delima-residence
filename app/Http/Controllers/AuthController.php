@@ -21,6 +21,8 @@ class AuthController extends Controller
                 'password' => 'required',
             ]);
 
+
+
             if (Auth::attempt($credentials)) {
 
                 $request->session()->regenerate();
@@ -39,10 +41,8 @@ class AuthController extends Controller
                 return redirect('/payment');
             }
 
-            return back()->with([
-
-                'error' => 'Username atau password salah'
-            ]);
+            return redirect('/login')
+            ->with('login_error', 'Username atau password salah');
         }
 
     public function logout(Request $request)

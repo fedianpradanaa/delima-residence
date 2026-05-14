@@ -7,7 +7,7 @@
     <div class="glass rounded-[32px] border border-white/40 p-5 shadow-2xl shadow-slate-200/60 md:p-8">
 
         <!-- Header -->
-        <div class="mb-8">
+        <div class="mb-6 sm:mb-8">
 
             <h1 class="mb-2 text-3xl font-bold tracking-tight text-teal-700">
 
@@ -22,7 +22,7 @@
             </p>
 
             <!-- Welcome Card -->
-            <div class="mb-8 rounded-3xl bg-gradient-to-br from-teal-500 to-teal-700 p-6 text-white shadow-xl shadow-teal-500/20">
+            <div class="mt-4 mb-8 rounded-3xl bg-gradient-to-br from-teal-500 to-teal-700 p-6 text-white shadow-xl shadow-teal-500/20">
 
                 <div class="mb-1 text-sm text-teal-100">
                     Selamat Datang
@@ -34,15 +34,17 @@
 
                 </div>
 
-                <div class="flex flex-wrap gap-4 text-sm">
+                <!-- ALWAYS 2 COLUMNS -->
+                <div class="grid grid-cols-2 gap-3 text-sm">
 
-                    <div class="min-w-[140px] flex-1">
+                    <!-- Rumah -->
+                    <div class="min-w-0">
 
-                        <div class="text-teal-100">
+                        <div class="text-teal-100 text-xs">
                             Rumah
                         </div>
 
-                        <div class="font-semibold">
+                        <div class="font-semibold truncate text-sm">
 
                             {{ auth()->user()->resident->alamat ?? '-' }}
 
@@ -50,13 +52,14 @@
 
                     </div>
 
-                    <div class="min-w-[140px] flex-1">
+                    <!-- Username -->
+                    <div class="min-w-0">
 
-                        <div class="text-teal-100">
+                        <div class="text-teal-100 text-xs">
                             Username
                         </div>
 
-                        <div class="font-semibold">
+                        <div class="font-semibold truncate text-sm">
 
                             {{ auth()->user()->username }}
 
@@ -67,8 +70,6 @@
                 </div>
 
             </div>
-
-        </div>
 
         <!-- Success -->
         @if(session('success'))
@@ -153,84 +154,116 @@
 
             @csrf
 
-            <!-- Periode -->
-            <div class="mb-5">
+<!-- Periode -->
+<div class="mb-5">
 
-                <label class="block mb-2 font-semibold">
+    <label class="block mb-2 font-semibold text-slate-700 flex items-center gap-2">
 
-                    Periode Pembayaran
+        <!-- Icon kalender -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-teal-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10m-11 9h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2z" />
+        </svg>
 
-                </label>
+        Periode Pembayaran
 
-                <select
-                    name="periode"
-                    x-model="periode"
-                    class="h-14 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 transition focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-100"
-                    required
-                >
+    </label>
 
-                    <option value="">
+    <select
+        name="periode"
+        x-model="periode"
+        required
+        class="h-14 w-full rounded-2xl border border-slate-200 bg-white px-4
+        text-slate-700 shadow-sm transition
+        focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-100"
+    >
 
-                        Pilih Periode
+        <option value="" disabled>
 
-                    </option>
+            Pilih Periode
 
-                    @foreach($availablePeriods as $item)
+        </option>
 
-                        <option
-                            value="{{ $item['bulan'] }}|{{ $item['tahun'] }}"
-                        >
+        @foreach($availablePeriods as $item)
 
-                            {{ $item['label'] }}
+            <option value="{{ $item['bulan'] }}|{{ $item['tahun'] }}">
 
-                        </option>
+                {{ $item['label'] }}
 
-                    @endforeach
+            </option>
 
-                </select>
+        @endforeach
 
-            </div>
+    </select>
 
-            <!-- Status Ronda -->
-            <div
-                class="mb-5"
-                x-show="periode"
-                x-transition
-            >
+</div>
 
-                <label class="block font-semibold mb-3">
+<!-- Status Ronda -->
+<div
+    class="mb-5"
+    x-show="periode"
+    x-transition
+>
 
-                    Status Ronda
+    <label class="block font-semibold mb-3 text-slate-700 flex items-center gap-2">
 
-                </label>
+        <!-- Icon user -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-teal-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5.121 17.804A9 9 0 1118.364 4.56 9 9 0 015.12 17.804z" />
+        </svg>
 
-                <label class="mb-3 flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
+        Status Ronda
 
-                    <input
-                        type="radio"
-                        name="ikut_ronda"
-                        value="1"
-                        x-model="ikutRonda"
-                    >
+    </label>
 
-                    Saya ikut ronda
+    <!-- Radio Card: Ikut -->
+    <label
+        class="mb-3 flex cursor-pointer items-center gap-3 rounded-2xl border px-4 py-4 transition
+        bg-slate-50 border-slate-200"
+        :class="ikutRonda == 1 ? 'border-teal-500 bg-teal-50' : ''"
+    >
 
-                </label>
+        <input
+            type="radio"
+            name="ikut_ronda"
+            value="1"
+            x-model="ikutRonda"
+            class="accent-teal-600"
+        >
 
-                <label class="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
+        <span class="font-medium text-slate-700">
 
-                    <input
-                        type="radio"
-                        name="ikut_ronda"
-                        value="0"
-                        x-model="ikutRonda"
-                    >
+            Saya ikut ronda
 
-                    Saya tidak ronda
+        </span>
 
-                </label>
+    </label>
 
-            </div>
+    <!-- Radio Card: Tidak -->
+    <label
+        class="flex cursor-pointer items-center gap-3 rounded-2xl border px-4 py-4 transition
+        bg-slate-50 border-slate-200"
+        :class="ikutRonda == 0 ? 'border-red-400 bg-red-50' : ''"
+    >
+
+        <input
+            type="radio"
+            name="ikut_ronda"
+            value="0"
+            x-model="ikutRonda"
+            class="accent-red-500"
+        >
+
+        <span class="font-medium text-slate-700">
+
+            Saya tidak ronda
+
+        </span>
+
+    </label>
+
+</div>
 
             <!-- Tanggal Ronda -->
             <div
@@ -239,20 +272,42 @@
                 x-transition
             >
 
-                <label class="block mb-2 font-semibold">
+    <label class="block mb-2 font-semibold text-slate-700 flex items-center gap-2">
 
-                    Tanggal Ronda
+        <!-- Icon kalender -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-teal-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10m-11 9h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2z" />
+        </svg>
 
-                </label>
+        Tanggal Ronda
 
-                <input
-                        type="date"
-                        name="tanggal_ronda"
-                        style="min-height:48px"
-                        class="h-14 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 transition focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-100"
-                    >
+    </label>
 
-            </div>
+    <div class="relative">
+
+        <input
+            type="date"
+            name="tanggal_ronda"
+            class="h-14 w-full rounded-2xl border border-slate-200 bg-white px-4 pl-12
+            text-slate-700 shadow-sm
+            transition
+            focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-100"
+        >
+
+        <!-- Icon di dalam input -->
+        <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10m-11 9h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2z" />
+            </svg>
+
+        </div>
+
+    </div>
+
+</div>
 
             <!-- Rincian -->
             <div
@@ -344,147 +399,82 @@
 
             </div>
 
-            <!-- Upload -->
-            <div
-                class="mb-6"
-                x-data="{ openPicker:false }"
-                x-show="ipl > 0"
-                x-transition
+                <!-- Upload -->
+<div
+    class="mb-6"
+    x-show="ipl > 0"
+    x-transition
+>
+
+    <label class="mb-3 block font-semibold">
+
+        Bukti Pembayaran
+
+    </label>
+
+    <!-- INPUT FILE -->
+    <input
+        type="file"
+        id="bukti_bayar"
+        name="bukti_bayar"
+        accept="image/*"\
+        class="hidden"
+        @change="
+            if($event.target.files.length > 0)
+            {
+                preview = URL.createObjectURL(
+                    $event.target.files[0]
+                )
+            }
+        "
+    >
+
+    <!-- BUTTON -->
+    <button
+        type="button"
+        @click="
+            document
+                .getElementById('bukti_bayar')
+                .click()
+        "
+        class="w-full rounded-3xl border-2 border-dashed border-teal-200 bg-teal-50/50 p-6 text-center transition active:scale-[0.98] hover:bg-teal-50"
+    >
+
+        <div class="mb-3 text-4xl">
+
+            📷
+
+        </div>
+
+        <div class="font-semibold text-slate-700">
+
+            Pilih Foto Pembayaran
+
+        </div>
+
+        <div class="mt-1 text-sm text-slate-500">
+
+            Kamera atau gallery
+
+        </div>
+
+    </button>
+
+    <!-- PREVIEW -->
+    <template x-if="preview">
+
+        <div class="mt-4">
+
+            <img
+                :src="preview"
+                class="w-full rounded-3xl border border-slate-200 shadow-lg"
             >
 
-                <label class="mb-3 block font-semibold">
+        </div>
 
-                    Bukti Pembayaran
+    </template>
 
-                </label>
-
-                <!-- INPUT CAMERA -->
-                <input
-                    type="file"
-                    id="camera_input"
-                    name="bukti_bayar"
-                    accept="image/*"
-                    capture="environment"
-                    class="hidden"
-                    @change="
-                        if($event.target.files.length > 0)
-                        {
-                            preview = URL.createObjectURL(
-                                $event.target.files[0]
-                            )
-                        }
-                    "
-                >
-
-                <!-- INPUT GALLERY -->
-                <input
-                    type="file"
-                    id="gallery_input"
-                    name="bukti_bayar"
-                    accept="image/*"
-                    class="hidden"
-                    @change="
-                        if($event.target.files.length > 0)
-                        {
-                            preview = URL.createObjectURL(
-                                $event.target.files[0]
-                            )
-                        }
-                    "
-                >
-
-                <!-- BUTTON -->
-                <button
-                    type="button"
-                    @click="openPicker = true"
-                    class="w-full rounded-3xl border-2 border-dashed border-teal-200 bg-teal-50/50 p-6 text-center transition active:scale-[0.98] hover:bg-teal-50"
-                >
-
-                    <div class="mb-3 text-4xl">
-
-                        📷
-
-                    </div>
-
-                    <div class="font-semibold text-slate-700">
-
-                        Pilih Foto Pembayaran
-
-                    </div>
-
-                    <div class="mt-1 text-sm text-slate-500">
-
-                        Kamera atau gallery
-
-                    </div>
-
-                </button>
-
-                <!-- MODAL PICKER -->
-                <div
-                    x-show="openPicker"
-                    x-transition
-                    class="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4"
-                >
-
-                    <div
-                        @click.away="openPicker = false"
-                        class="w-full max-w-md rounded-3xl bg-white p-4 shadow-2xl"
-                    >
-
-                        <div class="mb-4 text-center text-lg font-bold">
-
-                            Pilih Sumber Foto
-
-                        </div>
-
-                        <!-- CAMERA -->
-                        <button
-                            type="button"
-                            @click="
-                                document.getElementById('camera_input').click();
-                                openPicker = false;
-                            "
-                            class="mb-3 w-full rounded-2xl bg-teal-600 px-4 py-4 font-semibold text-white"
-                        >
-
-                            📷 Ambil dari Kamera
-
-                        </button>
-
-                        <!-- GALLERY -->
-                        <button
-                            type="button"
-                            @click="
-                                document.getElementById('gallery_input').click();
-                                openPicker = false;
-                            "
-                            class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-4 font-semibold text-slate-700"
-                        >
-
-                            🖼 Ambil dari Gallery
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-                <!-- PREVIEW -->
-                <template x-if="preview">
-
-                    <div class="mt-4">
-
-                        <img
-                            :src="preview"
-                            class="w-full rounded-3xl border border-slate-200 shadow-lg"
-                        >
-
-                    </div>
-
-                </template>
-
-            </div>
+</div>
 
             <!-- Submit -->
             <button

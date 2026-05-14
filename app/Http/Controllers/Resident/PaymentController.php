@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Payment;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class PaymentController extends Controller
 {
@@ -22,7 +24,8 @@ class PaymentController extends Controller
                 'resident_id',
                 auth()->user()->resident_id
             )
-            ->orderByDesc('tahun')
+        ->whereIn('status_verifikasi', ['pending', 'diterima'])    
+	->orderByDesc('tahun')
             ->orderByDesc('bulan')
             ->first();
 
@@ -89,6 +92,22 @@ class PaymentController extends Controller
 
     public function store(Request $request)
     {
+        Log::info('PAYMENT STORE START', [
+
+            'user_id' => auth()->id(),
+
+            'resident_id' =>
+                auth()->user()->resident_id,
+
+            'periode' =>
+                $request->periode,
+        ]);
+        
+        $request->validate([
+
+            'periode' => 'required'
+        ]);
+
         $periode = explode(
             '|',
             $request->periode
@@ -109,7 +128,7 @@ class PaymentController extends Controller
 
             'ikut_ronda' => 'required',
 
-            'bukti_bayar' => 'required|image',
+            'bukti_bayar' => 'required|file|mimes:jpg,jpeg,png,webp,heic,heif|max:10240',
         ]);
 
         if ($request->ikut_ronda == 1) {
@@ -132,7 +151,9 @@ class PaymentController extends Controller
 
         if ($exists) {
 
-            return back()->with([
+            return back()
+                ->withInput()
+                ->with([
 
                 'error' =>
                     'Pembayaran periode ini sudah ada'
@@ -179,14 +200,57 @@ class PaymentController extends Controller
             $kas +
             $denda;
 
+        if (!$request->hasFile('bukti_bayar')) {
+
+            return back()
+                ->withInput()
+                ->with([
+
+
+                'error' =>
+                    'File tidak ditemukan'
+            ]);
+        }
+
         $file = $request->file(
             'bukti_bayar'
         );
 
+        if (!$file->isValid()) {
+
+            return back()
+                ->withInput()
+                ->with([
+
+                'error' =>
+                    'Upload file gagal'
+            ]);
+        }
+
         $filename =
             time()
             . '_'
-            . $file->getClientOriginalName();
+            . uniqid()
+            . '.'
+            . $file->getClientOriginalExtension();
+
+        if (
+            !file_exists(
+                public_path('uploads/payments')
+            )
+        ) {
+
+            mkdir(
+
+                public_path(
+                    'uploads/payments'
+                ),
+
+                0777,
+
+                true
+            );
+        }
 
         $file->move(
 
@@ -202,7 +266,7 @@ class PaymentController extends Controller
             'uploads/payments/'
             . $filename;
 
-        Payment::create([
+        $payment = Payment::create([
 
             'user_id' =>
                 auth()->id(),
@@ -241,6 +305,73 @@ class PaymentController extends Controller
                 'pending',
         ]);
 
+        /*
+        |--------------------------------------------------------------------------
+        | TELEGRAM NOTIFICATION
+        |--------------------------------------------------------------------------
+        */
+
+        try {
+
+            $resident =
+                auth()->user()->resident;
+
+            $message =
+"🔔 PEMBAYARAN IPL BARU
+
+👤 Nama:
+{$resident->nama}
+
+🏠 Alamat:
+{$resident->alamat}
+
+📅 Periode:
+" . Carbon::create()
+        ->month((int) $request->bulan)
+        ->translatedFormat('F')
+        . " {$request->tahun}
+
+💰 Total:
+Rp " . number_format($total) . "
+
+📌 Status:
+MENUNGGU VERIFIKASI";
+
+            $response = Http::timeout(10)->post(
+
+                'https://api.telegram.org/bot'
+                . env('TELEGRAM_BOT_TOKEN')
+                . '/sendMessage',
+
+                [
+
+                    'chat_id' =>
+                        env('TELEGRAM_CHAT_ID'),
+
+                    'text' =>
+                        $message,
+                ]
+
+            );
+
+            Log::info('TELEGRAM RESPONSE', [
+
+                'response' =>
+                    $response->json()
+
+            ]);
+
+        } catch (\Exception $e) {
+
+            Log::error(
+                'TELEGRAM ERROR',
+                [
+                    'message' =>
+                        $e->getMessage()
+                ]
+            );
+        }
+
         session()->flash(
             'success',
             'Pembayaran berhasil dikirim'
@@ -252,11 +383,12 @@ class PaymentController extends Controller
     public function history()
     {
         $payments = Payment::where(
-            'user_id',
-            auth()->id()
-        )
-        ->latest()
-        ->get();
+                'user_id',
+                auth()->id()
+            )
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return view(
             'payments.history',

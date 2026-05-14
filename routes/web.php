@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ExpenseController;
 
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
@@ -12,6 +11,10 @@ use App\Http\Controllers\Resident\PaymentController as ResidentPaymentController
 
 use App\Http\Controllers\ImportPaymentController;
 use App\Http\Controllers\CashReportController;
+
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SummaryCashReportController;
+use App\Http\Controllers\ResidentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -133,17 +136,17 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | PASSWORD
+    | ACCOUNT
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/change-password', [
-        PasswordController::class,
-        'edit'
+    Route::get('/account', [
+        ProfileController::class,
+        'index'
     ]);
 
-    Route::post('/change-password', [
-        PasswordController::class,
+    Route::post('/account', [
+        ProfileController::class,
         'update'
     ]);
 
@@ -212,5 +215,25 @@ Route::middleware([
         ExpenseController::class,
         'store'
     ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | SUMMARY REPORT
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/summary-report', [
+        SummaryCashReportController::class,
+        'index'
+    ]);
+
+    Route::middleware('auth')->group(function () {
+
+    Route::resource(
+            'residents',
+            ResidentController::class
+        );
+
+    });
 
 });

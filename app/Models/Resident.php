@@ -14,7 +14,15 @@ class Resident extends Model
 
         'nama',
 
-        'status_rumah'
+        'status_rumah',
+
+        'rukem',
+
+        'nomor_hp',
+
+        'tanggal_masuk',
+
+        'tanggal_keluar',
     ];
 
     /*

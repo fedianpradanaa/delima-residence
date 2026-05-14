@@ -30,6 +30,80 @@
 
     <title>Delima Residence</title>
 
+    <!-- SEO -->
+    <meta
+        name="description"
+        content="Sistem pembayaran IPL dan kas Cluster Delima Residence"
+    >
+
+    <!-- Open Graph -->
+    <meta
+        property="og:type"
+        content="website"
+    >
+
+    <meta
+        property="og:title"
+        content="Delima Residence"
+    >
+
+    <meta
+        property="og:description"
+        content="Pembayaran IPL dan kas Cluster Delima Residence"
+    >
+
+    <meta
+        property="og:image"
+        content="{{ asset('favicon.png') }}"
+    >
+
+    <meta
+        property="og:url"
+        content="{{ url()->current() }}"
+    >
+
+    <!-- Twitter -->
+    <meta
+        name="twitter:card"
+        content="summary_large_image"
+    >
+
+    <meta
+        name="twitter:title"
+        content="Delima Residence"
+    >
+
+    <meta
+        name="twitter:description"
+        content="Sistem pembayaran IPL dan kas Cluster Delima Residence"
+    >
+
+    <meta
+        name="twitter:image"
+        content="{{ asset('favicon.png') }}"
+    >
+
+    <!-- Favicon SVG -->
+    <link
+        rel="icon"
+        type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%230ea5a4'/%3E%3Cstop offset='100%25' stop-color='%230f766e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='128' height='128' rx='32' fill='url(%23g)'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Inter,Arial,sans-serif' font-size='72' font-weight='800' fill='white'%3ED%3C/text%3E%3C/svg%3E"
+    >
+
+    <!-- PNG Fallback -->
+    <link
+        rel="icon"
+        type="image/png"
+        sizes="512x512"
+        href="{{ asset('favicon.png') }}"
+    >
+
+    <!-- Apple -->
+    <link
+        rel="apple-touch-icon"
+        href="{{ asset('favicon.png') }}"
+    >
+
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -55,6 +129,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
+
 
     <style>
 
@@ -225,6 +300,26 @@
 
                     </a>
 
+                    <a
+                        href="/summary-report"
+                        class="px-4 py-2 rounded-xl text-sm font-medium transition
+                        {{ request()->is('summary-report') ? 'bg-teal-600 text-white shadow' : 'text-slate-600 hover:bg-slate-100' }}"
+                    >
+
+                        Summary Report
+
+                    </a>
+
+                    <a
+                        href="/residents"
+                        class="px-4 py-2 rounded-xl text-sm font-medium transition
+                        {{ request()->is('residents') ? 'bg-teal-600 text-white shadow' : 'text-slate-600 hover:bg-slate-100' }}"
+                    >
+
+                        Master Warga
+
+                    </a>
+
                 @endif
 
                 {{-- WARGA --}}
@@ -269,21 +364,21 @@
 
                     </a>
 
+                    <!-- Akun -->
+                    <a
+                        href="/account"
+                        class="rounded-2xl px-4 py-2 text-sm font-medium transition-all duration-200
+                        {{ request()->is('account')
+                            ? 'bg-teal-600 text-white shadow-lg shadow-teal-500/30'
+                            : 'text-slate-600 hover:bg-slate-100'
+                        }}"
+                    >
+
+                        Akun
+
+                    </a>
+
                 @endif
-
-                <!-- Password -->
-                <a
-                    href="/change-password"
-                    class="rounded-2xl px-4 py-2 text-sm font-medium transition-all duration-200
-                    {{ request()->is('change-password')
-                        ? 'bg-teal-600 text-white shadow-lg shadow-teal-500/30'
-                        : 'text-slate-600 hover:bg-slate-100'
-                    }}"
-                >
-
-                    Password
-
-                </a>
 
                 <!-- Logout -->
                 <form action="/logout" method="POST">
@@ -386,6 +481,24 @@
 
                         </a>
 
+                        <a
+                            href="/summary-report"
+                            class="rounded-2xl px-4 py-3 transition hover:bg-slate-100"
+                        >
+
+                            Summary Report
+
+                        </a>
+
+                        <a
+                            href="/residents"
+                            class="rounded-2xl px-4 py-3 transition hover:bg-slate-100"
+                        >
+
+                            Master Warga
+
+                        </a>
+
                     @endif
 
                     {{-- WARGA --}}
@@ -418,16 +531,16 @@
 
                         </a>
 
+                        <a
+                            href="/account"
+                            class="rounded-2xl px-4 py-3 transition hover:bg-slate-100"
+                        >
+
+                            Akun
+
+                        </a>
+
                     @endif
-
-                    <a
-                        href="/change-password"
-                        class="rounded-2xl px-4 py-3 transition hover:bg-slate-100"
-                    >
-
-                        Password
-
-                    </a>
 
                     <form action="/logout" method="POST">
 
@@ -468,128 +581,102 @@
 @auth
 
 <!-- MOBILE BOTTOM NAV -->
+{{-- WARGA --}}
+@if(auth()->user()->role == 'warga')
 <div
     class="fixed bottom-0 left-0 right-0 z-50 md:hidden"
     style="padding-bottom:env(safe-area-inset-bottom)"
 >
 
-    <div
-        class="glass flex justify-around border-t border-white/40 px-3 py-3"
-    >
+    <div class="glass flex justify-around border-t border-white/40 px-2 py-3">
 
-        {{-- ADMIN --}}
-        @if(auth()->user()->role == 'admin')
-
-            <a
-                href="/dashboard"
-                class="
-                flex flex-col items-center gap-1 rounded-2xl px-4 py-2 text-xs
-                transition-all duration-200
-
-                {{ request()->is('dashboard')
+            <!-- IPL (CREATE PEMBAYARAN) -->
+            <a href="/payment"
+               class="flex flex-col items-center gap-1 rounded-2xl px-3 py-2 text-xs transition-all duration-200
+               {{ request()->is('payment')
                     ? 'bg-teal-600 text-white shadow-lg shadow-teal-500/30'
                     : 'text-slate-600 hover:bg-slate-100 active:scale-95'
-                }}
-                "
-            >
+               }}">
 
-                <span>🏠</span>
-                <span>Home</span>
+                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white border border-slate-200 shadow-sm">
+
+                    <svg class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6M9 16h6M7 4h10a2 2 0 012 2v14l-4-2-4 2-4-2-4 2V6a2 2 0 012-2z" />
+
+                    </svg>
+
+                </div>
+
+                <span>Upload IPL</span>
 
             </a>
 
-            <a
-                href="/payments"
-                class="
-                flex flex-col items-center gap-1 rounded-2xl px-4 py-2 text-xs
-                transition-all duration-200
-
-                {{ request()->is('payments')
+            <!-- RIWAYAT -->
+            <a href="/payment-history"
+               class="flex flex-col items-center gap-1 rounded-2xl px-3 py-2 text-xs transition-all duration-200
+               {{ request()->is('payment-history')
                     ? 'bg-teal-600 text-white shadow-lg shadow-teal-500/30'
                     : 'text-slate-600 hover:bg-slate-100 active:scale-95'
-                }}
-                "
-            >
+               }}">
 
-                <span>💳</span>
-                <span>Bayar</span>
+                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white border border-slate-200 shadow-sm">
 
-            </a>
+                    <svg class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 16h8M8 12h8M8 8h8" />
+                    </svg>
 
-            <a
-                href="/cash-report"
-                class="
-                flex flex-col items-center gap-1 rounded-2xl px-4 py-2 text-xs
-                transition-all duration-200
+                </div>
 
-                {{ request()->is('cash-report')
-                    ? 'bg-teal-600 text-white shadow-lg shadow-teal-500/30'
-                    : 'text-slate-600 hover:bg-slate-100 active:scale-95'
-                }}
-                "
-            >
-
-                <span>📊</span>
-                <span>Kas</span>
-
-            </a>
-
-        @endif
-
-        {{-- WARGA --}}
-        @if(auth()->user()->role == 'warga')
-
-            <a
-                href="/payment"
-                class="
-                flex flex-col items-center gap-1 rounded-2xl px-4 py-2 text-xs
-                transition-all duration-200
-
-                {{ request()->is('payment')
-                    ? 'bg-teal-600 text-white shadow-lg shadow-teal-500/30'
-                    : 'text-slate-600 hover:bg-slate-100 active:scale-95'
-                }}
-                "
-            >
-
-                <span>💳</span>
-                <span>IPL</span>
-
-            </a>
-
-            <a
-                href="/payment-history"
-                class="
-                flex flex-col items-center gap-1 rounded-2xl px-4 py-2 text-xs
-                transition-all duration-200
-
-                {{ request()->is('payment-history')
-                    ? 'bg-teal-600 text-white shadow-lg shadow-teal-500/30'
-                    : 'text-slate-600 hover:bg-slate-100 active:scale-95'
-                }}
-                "
-            >
-
-                <span>📄</span>
                 <span>Riwayat</span>
 
             </a>
 
-            <a
-                href="/cash-report"
-                class="
-                flex flex-col items-center gap-1 rounded-2xl px-4 py-2 text-xs
-                transition-all duration-200
-
-                {{ request()->is('cash-report')
+            <!-- KAS -->
+            <a href="/cash-report"
+               class="flex flex-col items-center gap-1 rounded-2xl px-3 py-2 text-xs transition-all duration-200
+               {{ request()->is('cash-report')
                     ? 'bg-teal-600 text-white shadow-lg shadow-teal-500/30'
                     : 'text-slate-600 hover:bg-slate-100 active:scale-95'
-                }}
-                "
-            >
+               }}">
 
-                <span>📊</span>
+                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white border border-slate-200 shadow-sm">
+
+                    <svg class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h12a2 2 0 012 2v2m0 0H6m14 0h-4m0 0V8m0 4v4" />
+
+                    </svg>
+
+                </div>
+
                 <span>Kas</span>
+
+            </a>
+
+            <!-- AKUN -->
+            <a href="/account"
+               class="flex flex-col items-center gap-1 rounded-2xl px-3 py-2 text-xs transition-all duration-200
+               {{ request()->is('account')
+                    ? 'bg-teal-600 text-white shadow-lg shadow-teal-500/30'
+                    : 'text-slate-600 hover:bg-slate-100 active:scale-95'
+               }}">
+
+                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white border border-slate-200 shadow-sm">
+
+                    <svg class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 12a3 3 0 100-6 3 3 0 000 6zm0 2c-3.313 0-6 1.686-6 3.75V19h12v-1.25C18 15.686 15.313 14 12 14z" />
+
+                    </svg>
+
+                </div>
+
+                <span>Akun</span>
 
             </a>
 

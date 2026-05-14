@@ -206,6 +206,35 @@
 
             </table>
 
+            <!-- Pagination -->
+            <div class="border-t border-slate-100 bg-gradient-to-r from-slate-50 to-white px-6 py-5">
+
+                <div class="flex items-center justify-between flex-wrap gap-4">
+
+                    <div class="text-sm text-slate-500">
+
+                        Menampilkan
+                        <span class="font-semibold text-slate-700">
+                            {{ $payments->firstItem() }}
+                        </span>
+                        -
+                        <span class="font-semibold text-slate-700">
+                            {{ $payments->lastItem() }}
+                        </span>
+                        dari
+                        <span class="font-semibold text-slate-700">
+                            {{ $payments->total() }}
+                        </span>
+                        pembayaran
+
+                    </div>
+
+                    {{ $payments->links() }}
+
+                </div>
+
+            </div>
+
         </div>
 
     </div>
